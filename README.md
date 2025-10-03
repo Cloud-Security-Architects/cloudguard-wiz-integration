@@ -85,12 +85,57 @@ You have two options to accomplish this task
 
 ## Option 1: Add Script to CME Template Using the UI
 1.	In the SmartConsole UI, select 'Edit' the current CME configuration where you have your connected scaling deployment
+
 ![CHKP Wiz Integration](/resources/chkp-wiz-integration-A.png)
 
 2. Select the template in which you want to enable the Wiz integration in the SmartConsole UI Start by looking at the templates available under the desired CME account and choose the Pencil icon on the CME template you wish to enable the integration.
+
 ![CHKP Wiz Integration](/resources/chkp-wiz-integration-B.png)
 
 3.	On the desired template, please set the name of the script to be used under CME attributes.
+
 ![CHKP Wiz Integration](/resources/chkp-wiz-integration-C.png)
 
 ## Option 2: Add Script to CME Template Using APIs
+
+> **⚠️ Important:** Remember to publish your changes after updating the API.
+In order to call the CME API you can:
+- Utilize the Check Point provided Postman collection available at [CloudGuardIaaS/cme_api_postman](https://github.com/CheckPointSW/CloudGuardIaaS/tree/master/common/cme_api_postman).
+- Directly call management APIs, in which case here are some examples on how to do so:
+
+Attach to AWS Template
+```bash
+PUT https://<MGMT>/web_api/v1.8/cme-api/v1.3.1/gwConfigurations/aws/<TEMPLATE_NAME>
+X-chkp-sid: <SID>
+Content-Type: application/json
+{
+  "repository_gateway_scripts": [{ "name": "install_rulebase_dump.sh" }]
+}
+```
+Attach to Azure Template
+```bash
+PUT https://<MGMT>/web_api/v1.8/cme-api/v1.3.1/gwConfigurations/azure/<TEMPLATE_NAME>
+X-chkp-sid: <SID>
+Content-Type: application/json
+{
+  "repository_gateway_scripts": [{ "name": "install_rulebase_dump.sh" }]
+}
+```
+Attach to GCP Template 
+```bash
+PUT https://<MGMT>/web_api/v1.8/cme-api/v1.3.1/gwConfigurations/gcp/<TEMPLATE_NAME>
+X-chkp-sid: <SID>
+Content-Type: application/json
+{
+  "repository_gateway_scripts": [{ "name": "install_rulebase_dump.sh" }]
+}
+```
+Attach to OCI Template
+```bash
+PUT https://<MGMT>/web_api/v1.8/cme-api/v1.3.1/gwConfigurations/oci/<TEMPLATE_NAME>
+X-chkp-sid: <SID>
+Content-Type: application/json
+{
+  "repository_gateway_scripts": [{ "name": "install_rulebase_dump.sh" }]
+}
+```
