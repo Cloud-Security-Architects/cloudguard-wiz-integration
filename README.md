@@ -1,9 +1,7 @@
-# cloudguard-wiz-integration
-Repository explaining how to implement automated export of Access &amp; NAT Policies to JSON for Wiz
-
-# Check Point Security Gateway - Rulebase Logging Configuration Guide
+# Automated Export of Access & NAT Policies to JSON for Wiz
 
 This guide provides step-by-step instructions for enabling local logging of policies on Check Point Security Gateways. Please review Check Point documentation SK for general information: [sk183560 - Exporting Security Policy on a Security Gateway](https://support.checkpoint.com/results/sk/sk183560)
+> **ℹ️ Note:**  This document was prepared with Wiz in mind; but it should work with other 3rd party  that require access to NAT and Access Rules.
 
 ## Overview
 
@@ -49,7 +47,7 @@ The wrapper provides clear logging at `/var/log/rulebase_dump/setup.log`, idempo
 #### Where to save the Wrapper Script
 
 Save the wrapper anywhere on your admin workstation. For instance: `~/cme-scripts/install_rulebase_dump.sh`.
-You can [copy the script here](https://github.com/Cloud-Security-Architects/cloudguard-wiz-integration/).
+You can [copy the script here](https://github.com/Cloud-Security-Architects/cloudguard-wiz-integration/blob/main/install_rulebase_dump.sh).
 
 - **If you use the API:** upload it as Base64 into the Management Scripts Repository.
 - **If you use the UI:** open Scripts Repository in SmartConsole and paste the script in cleartext (no Base64 needed).
