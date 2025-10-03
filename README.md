@@ -83,3 +83,14 @@ You have two options to accomplish this task
 
 > **⚠️ Important:** When done, don't forget to **Force reapply to existing gateways** (optional) and **Validate on a fresh instance**
 
+## Option 1: Add Script to CME Template Using the UI
+1.	In the SmartConsole UI, select 'Edit' the current CME configuration where you have your connected scaling deployment
+![CHKP Wiz Integration](/resources/chkp-wiz-integration-A.png)
+
+2. Select the template in which you want to enable the Wiz integration in the SmartConsole UI Start by looking at the templates available under the desired CME account and choose the Pencil icon on the CME template you wish to enable the integration.
+![CHKP Wiz Integration](/resources/chkp-wiz-integration-B.png)
+
+3.	On the desired template, please set the name of the script to be used under CME attributes.
+![CHKP Wiz Integration](/resources/chkp-wiz-integration-C.png)
+
+## Option 2: Add Script to CME Template Using APIs
