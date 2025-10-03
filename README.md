@@ -139,3 +139,94 @@ Content-Type: application/json
   "repository_gateway_scripts": [{ "name": "install_rulebase_dump.sh" }]
 }
 ```
+
+
+**On VSX, switch to the target Virtual System before inspecting files:**
+
+```bash
+vsenv <VSID>
+ls -l /var/log/rulebase_dump/
+```
+
+Expect per-VS filenames like `AccessRB_<VSID>.json` and `NatRB_<VSID>.json`.
+
+### When do the JSON files appear?
+
+The installer sets up **scheduled** exports. The first JSON may **not** appear immediately. This is expected. Check `/var/log/rulebase_dump/setup.log` for “finished successfully,” then verify files after the first scheduled run window.
+
+---
+
+## For Tactical Use: Via SmartConsole ‘OneTime Script’
+
+1. Ensure your admin profile has: **Gateways → Scripts → Run OneTime Scripts**.
+2. Right click the gateway → **OneTime Script** → paste the installer command → **Run**.
+3. Validate on the gateway as above.
+
+> ℹ️ **Note:** For VSX, if you later shell into the appliance to verify, use `vsenv <VSID>` before checking files.
+
+### Required permission (SmartConsole)
+
+Ensure your admin profile has **Gateways → Scripts → Run One-Time Scripts** enabled. If you don’t see “One-Time Script” on right-click, ask your admin to add this permission to your role.
+
+---
+
+## OPS & Security Notes
+
+* Treat `/var/log/rulebase_dump/` as **sensitive** (reveals reachability).
+* Grant your collector only the **minimum** read privileges needed.
+* **VSX:** verify per VS context with `vsenv <VSID>`.
+* **Autoscale:** template inheritance ensures new/replaced instances auto-run the installer after policy install.
+
+---
+
+## Troubleshooting
+
+* **No files yet?** First export may run on the next schedule window; check `setup.log` for successful install.
+* **Reinstall intentionally:** run with `FORCE=1` (or bump template `generation`).
+* **Autoscale host missed it:** ensure the template includes `repository_gateway_scripts` and that a **policy install** occurred; bump `generation` to force reapply.
+* **VSX tip:** On VSX, switch to the target Virtual System before inspecting files:
+
+  ```bash
+  vsenv <VSID>
+  ls -l /var/log/rulebase_dump/
+  ```
+
+  Expect per-VS filenames like `AccessRB_<VSID>.json` and `NatRB_<VSID>.json`.
+
+---
+
+# sk183560 Exporting Security Policy on a Security Gateway
+
+- **Product**: Quantum Security Gateways
+- **Version**: R81.20, R82
+- **OS**: Gaia
+- **Last Modified**: 2025-09-04
+
+## Solution
+
+### **Summary:**
+This solution facilitates the automated export of Access and NAT rulebases from Check Point Security Gateways in JSON format, saving them to a designated directory on the gateway filesystem. These files can be read by external platforms—such as CNAPP tools like Wiz—to perform advanced security analysis, visualize toxic access combinations, and generate contextual recommendations.
+
+The solution operates via the `rulebase_dump.sh` script, which schedules two daily exports at twelve-hour intervals. It is supported on Gaia based systems including VSX.
+
+### **How to Enable:**
+1. Open SmartConsole.
+2. Right-click the applicable Gateway and select One-Time Script.
+3. In the *Run One Time Script* window, paste this script on Security Management:
+```
+UO_REVISION=$(grep -oP '(?<=<Last_Revision>)[0-9]+' "$CPDIR/database/downloads/ONLINE_SERVICES/1.0/last_revision.xml") ; chmod +x $CPDIR/database/downloads/ONLINE_SERVICES/1.0/$UO_REVISION/static_files/rulebase_dump/rulebase_dump.sh ; $CPDIR/database/downloads/ONLINE_SERVICES/1.0/$UO_REVISION/static_files/rulebase_dump/rulebase_dump.sh install
+```
+4. Click Run.
+5. Make sure the command succeeded.
+6. Repeat steps 2-5 on relevant gateways.
+
+### **Output:**
+- The exported rulebase files are saved in this file on the Security Gateway: `/var/log/rulebase_dump/`
+- Each time the script runs, the following policy files are exported in JSON format for integration or analysis:
+    - `AccessRB_0.json` (or `AccessRB_<VSID>.json` in case of VSX)— Access rulebase
+    - `NatRB_0.json` (or `NatRB_<VSID>.json` in case of VSX) — NAT rulebase
+
+### **Important Notes:**
+- Run the script once to install and schedule exports. Re-running it updates the export schedule. This enables consistent external policy syncing.
+- The script supports Virtual System Extension (VSX) environments and exports rule bases for all configured Virtual Systems (VSs).
+- The output files are in structured JSON format, suitable for ingestion by platforms such as Wiz to enable external policy analysis, graph modeling, or security insights.
