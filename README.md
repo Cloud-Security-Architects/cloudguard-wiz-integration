@@ -61,7 +61,7 @@ X-chkp-sid: <SID>
 Content-Type: application/json
 {
   "name": "install_rulebase_dump.sh",
-  "script": "<BASE64_OF_WRAPPER>"
+  "script-body-base64": "<BASE64_OF_WRAPPER>"
 }
 ```
 ### 3.1 Attach to Each CME Gateway Template
